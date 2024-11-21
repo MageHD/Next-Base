@@ -36,9 +36,11 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat curl wget postgresql-client
 WORKDIR /app
 
-# Copy Prisma schema and environment files, then install dependencies
-COPY prisma ./prisma
-COPY messages ./messages  
+# Conditionally copy Prisma schema and other directories
+RUN if [ -d "prisma" ]; then cp -r prisma ./prisma; else echo "No Prisma directory to copy"; fi
+RUN if [ -d "messages" ]; then cp -r messages ./messages; else echo "No messages directory to copy"; fi
+
+
 # Copy environment files
 #COPY .env* ./
 
